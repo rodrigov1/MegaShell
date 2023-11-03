@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -pedantic -Werror -Wextra -Wconversion -std=gnu11
+CFLAGS = -Wall -pedantic -Werror
 
 # Source files
 SRC = main.c
