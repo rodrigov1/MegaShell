@@ -8,13 +8,13 @@
 
 Por ejemplo, para el home: username@hostname:~$
 
-2. Internal commands (myshell debe soportar los siguientes comandos internos)
+2. Internal commands (myshell debe soportar los siguientes comandos internos) [ LISTO ]
 
-    cd > directorio > : cambia el directorio actual a <directorio>. Si <directorio> no está presente, reporta el directorio actual. 
-    Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD. 
+    cd > directorio > : cambia el directorio actual a <directorio>. Si <directorio> no está presente, reporta el directorio actual.
+    Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD.
     Este comando debe soportar la opción cd -, que retorna al último directorio de trabajo (OLDPWD). [LISTO]
 
-    clr: limpia la pantalla 
+    clr: limpia la pantalla
 
     echo <comentario|env var> : muestra <comentario> en la pantalla seguido por una línea nueva. (múltiples espacios/tabs pueden ser reducidos a un espacio).
 
@@ -24,6 +24,7 @@ int main()
 {
     char input[1024];
     char *args[64]; // Suponemos un máximo de 64 argumentos
+    
     char *token;
     char buffer[PATH_MAX];
     char hostname[HOST_NAME_MAX];
@@ -63,6 +64,7 @@ int main()
             input[input_length - 1] = '\0';
         }
 
+        int argc = 0;
         // Voy despedazando los comandos por string hasta un espacio
         token = strtok(input, " ");
         while (token != NULL)
@@ -73,68 +75,89 @@ int main()
         }
         args[argc] = NULL;
 
-        // Comando 'cd'
-        if (argc > 0 && strcmp(args[0], "cd") == 0)
+        
+        if (argc > 0)
         {
-            if (argc == 1)
+            if (strcmp(args[0], "cd") == 0) // Comando 'cd'
             {
-                // Sin argumentos, mostrar el directorio actual
-                char cwd[1024];
-                if (getcwd(cwd, sizeof(cwd)) != NULL)
+                if (argc == 1)
                 {
-                    printf("%s\n", cwd);
-                }
-                else
-                {
-                    fprintf(stderr,"Error al obtener el directorio actual");
-                }
-            }
-            else if (argc == 2)
-            {
-                // Cambiar al directorio anterior
-                if (strcmp(args[1], "-") == 0)
-                {
-                    char *old_pwd = getenv("OLDPWD");
-                    if (old_pwd != NULL)
-                    {
-                        chdir(old_pwd);
-                    }
-                    else
-                    {
-                        fprintf(stderr,"Variable de entorno OLDPWD no definida\n");
-                    }
-                }
-                else
-                {
-                }
-            }
-            else if (argc == 3)
-            {   
-                if (chdir(args[2]) == 0)
-                {
+                    // Sin argumentos, mostrar el directorio actual
                     char cwd[1024];
                     if (getcwd(cwd, sizeof(cwd)) != NULL)
                     {
-                        setenv("OLDPWD", getenv("PWD"), 1); // Actualizar OLDPWD
-                        setenv("PWD", cwd, 1);              // Actualizar PWD
+                        printf("%s\n", cwd);
                     }
                     else
                     {
-                        fprintf(stderr,"Error al obtener el directorio actual");
+                        fprintf(stderr, "Error al obtener el directorio actual");
                     }
                 }
-                else
+                else if (argc == 2)
                 {
-                    fprintf(stderr,"Error al cambiar de directorio");
+                    // Cambiar al directorio anterior
+                    if (strcmp(args[1], "-") == 0)
+                    {
+                        char *old_pwd = getenv("OLDPWD");
+                        if (old_pwd != NULL)
+                        {
+                            chdir(old_pwd);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Variable de entorno OLDPWD no definida\n");
+                        }
+                    }
+                    else
+                    {
+                    }
+                }
+                else if (argc == 3)
+                {
+                    if (chdir(args[2]) == 0)
+                    {
+                        char cwd[1024];
+                        if (getcwd(cwd, sizeof(cwd)) != NULL)
+                        {
+                            setenv("OLDPWD", getenv("PWD"), 1); // Actualizar OLDPWD
+                            setenv("PWD", cwd, 1);              // Actualizar PWD
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Error al obtener el directorio actual");
+                        }
+                    }
+                    else
+                    {
+                        fprintf(stderr, "Error al cambiar de directorio\n");
+                    }
+                }
+            }
+            else if (strcmp(args[0], "clr") == 0) // Comando clr
+            {
+                printf("\033[H\033[J"); // Limpia la pantalla y coloca el cursor en la parte superior izquierda
+            } 
+            else if (strcmp(args[0],"quit") == 0) // Comando quit
+            {
+                break;
+            } 
+            else if (strcmp(args[0],"echo") == 0) // Muestra comentario o variable de entorno por pantalla
+            {
+                if (strcmp(args[1],"$USER")== 0) // En el TP no especifican que variable de entorno imprimir asique supuse que era USER
+                {
+                    printf("%s\n",username);
+                } else {
+                    int i = 1;
+                    while (args[i] != NULL){
+                        printf("%s ", args[i]);
+                        i++;
+                    }
+                    printf("\n");
                 }
             }
         }
-        else
-        {
-            // Aca irian los otros comandos
-        }
     }
 
-    printf("Saliendo de myshell.\n");
+    //printf("Saliendo de myshell.\n");
     return 0;
 }
