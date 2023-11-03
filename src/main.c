@@ -14,17 +14,16 @@ Por ejemplo, para el home: username@hostname:~$
     Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD.
     Este comando debe soportar la opción cd -, que retorna al último directorio de trabajo (OLDPWD). [LISTO]
 
-    clr: limpia la pantalla
+    clr: limpia la pantalla [LISTO]
 
     echo <comentario|env var> : muestra <comentario> en la pantalla seguido por una línea nueva. (múltiples espacios/tabs pueden ser reducidos a un espacio).
 
-    quit : cierra myshell
+    quit : cierra myshell [LISTO]
 */
 int main()
 {
     char input[1024];
     char *args[64]; // Suponemos un máximo de 64 argumentos
-    
     char *token;
     char buffer[PATH_MAX];
     char hostname[HOST_NAME_MAX];
@@ -86,7 +85,7 @@ int main()
                     char cwd[1024];
                     if (getcwd(cwd, sizeof(cwd)) != NULL)
                     {
-                        printf("%s\n", cwd);
+                        fprintf(stdout,"%s\n", cwd);
                     }
                     else
                     {
@@ -135,7 +134,7 @@ int main()
             }
             else if (strcmp(args[0], "clr") == 0) // Comando clr
             {
-                printf("\033[H\033[J"); // Limpia la pantalla y coloca el cursor en la parte superior izquierda
+                fprintf(stdout,"\033[H\033[J"); // Limpia la pantalla y coloca el cursor en la parte superior izquierda
             } 
             else if (strcmp(args[0],"quit") == 0) // Comando quit
             {
@@ -143,16 +142,21 @@ int main()
             } 
             else if (strcmp(args[0],"echo") == 0) // Muestra comentario o variable de entorno por pantalla
             {
-                if (strcmp(args[1],"$USER")== 0) // En el TP no especifican que variable de entorno imprimir asique supuse que era USER
+                if (strchr(args[1],'$')!=NULL) // 
                 {
-                    printf("%s\n",username);
+                    char* string = strchr(args[1],'$');
+                    char* var = string+1;
+                    if (getenv(var)!=NULL)
+                        fprintf(stdout,"%s\n",getenv(var));
+                    else
+                        fprintf(stdout,"Error con la variable de entorno\n");
                 } else {
                     int i = 1;
                     while (args[i] != NULL){
-                        printf("%s ", args[i]);
+                        fprintf(stdout,"%s ", args[i]);
                         i++;
                     }
-                    printf("\n");
+                    fprintf(stdout,"\n");
                 }
             }
         }
