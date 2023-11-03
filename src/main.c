@@ -3,7 +3,23 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+/*
+1. Command line prompt (myshell debe contar con un prompt que contenga el camino al directorio actual) [LISTO]
 
+Por ejemplo, para el home: username@hostname:~$
+
+2. Internal commands (myshell debe soportar los siguientes comandos internos)
+
+    cd > directorio > : cambia el directorio actual a <directorio>. Si <directorio> no está presente, reporta el directorio actual. 
+    Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD. 
+    Este comando debe soportar la opción cd -, que retorna al último directorio de trabajo (OLDPWD). [LISTO]
+
+    clr: limpia la pantalla 
+
+    echo <comentario|env var> : muestra <comentario> en la pantalla seguido por una línea nueva. (múltiples espacios/tabs pueden ser reducidos a un espacio).
+
+    quit : cierra myshell
+*/
 int main()
 {
     char input[1024];
@@ -47,8 +63,7 @@ int main()
             input[input_length - 1] = '\0';
         }
 
-        // Voy guardando los comandos por tokens para saber que hacer
-        int argc = 0;
+        // Voy despedazando los comandos por string hasta un espacio
         token = strtok(input, " ");
         while (token != NULL)
         {
@@ -94,8 +109,8 @@ int main()
                 }
             }
             else if (argc == 3)
-            {
-                if (chdir(args[1]) == 0)
+            {   
+                if (chdir(args[2]) == 0)
                 {
                     char cwd[1024];
                     if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -105,12 +120,12 @@ int main()
                     }
                     else
                     {
-                        perror("Error al obtener el directorio actual");
+                        fprintf(stderr,"Error al obtener el directorio actual");
                     }
                 }
                 else
                 {
-                    perror("Error al cambiar de directorio");
+                    fprintf(stderr,"Error al cambiar de directorio");
                 }
             }
         }
