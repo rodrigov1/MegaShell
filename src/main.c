@@ -3,6 +3,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include "manage_commands.h"
+#include "cd.h"
+#include "clr.h"
 /*
 1. Command line prompt (myshell debe contar con un prompt que contenga el camino al directorio actual) [LISTO]
 
@@ -20,6 +23,36 @@ Por ejemplo, para el home: username@hostname:~$
 
     quit : cierra myshell [LISTO]
 */
+
+int main(int argc, char const *argv[])
+{
+	if(argc>=2){
+		FILE* file = fopen(argv[1],"r");
+		if(file!=NULL){
+			char* line = (char*)malloc(sizeof(char)*1024);
+			while(fgets(line,1024,file)!=NULL){
+				execute_Command(line);
+			}
+			fclose(file);
+			free(line);
+			exit(0);
+		}
+		else{
+			fprintf(stderr,"Error opening file\n");
+			exit(-1);
+		}
+	}
+
+	while(1){
+		char* command;
+		command = get_Command();
+		execute_Command(command);
+	}
+
+	return 0;
+}
+
+/*
 int main()
 {
     char input[1024];
@@ -164,4 +197,4 @@ int main()
 
     //printf("Saliendo de myshell.\n");
     return 0;
-}
+}*/
