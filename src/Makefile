@@ -15,7 +15,7 @@ TARGET = myshell
 DATE := $(shell date)
 
 # Include directory
-INCDIR = /headers
+INCDIR = ./include
 
 # Build the target executable
 $(TARGET): $(OBJ)

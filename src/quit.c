@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include "quit.h"
+#include "../include/quit.h"
 
 
 void quit(void){

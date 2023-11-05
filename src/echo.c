@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "echo.h"
+#include "../include/echo.h"
 
 void echo(int argc, char *args[])
 {

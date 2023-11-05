@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include "manage_commands.h"
+#include "../include/manage_commands.h"
 /*
 1. Command line prompt (myshell debe contar con un prompt que contenga el camino al directorio actual) [LISTO]
 

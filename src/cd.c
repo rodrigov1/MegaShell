@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include "cd.h"
+#include "../include/cd.h"
 
 void cd(int argc, char *args[])
 {

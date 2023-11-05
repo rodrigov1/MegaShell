@@ -3,11 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
-#include "manage_commands.h"
-#include "cd.h"
-#include "clr.h"
-#include "quit.h"
-#include "echo.h"
+#include "../include/manage_commands.h"
+#include "../include/cd.h"
+#include "../include/clr.h"
+#include "../include/quit.h"
+#include "../include/echo.h"
 
 char* get_Command(void);
 void execute_Command(char* command);
@@ -76,11 +76,11 @@ void execute_Command(char *command)
 
     if (argc > 0)
     {
-        if (strcmp(args[0], "cd") == 0) // Comando 'cd'
+        if (strcmp(args[0], "cd") == 0) 
         {
             cd(argc, args);
         }
-        else if (strcmp(args[0], "clr") == 0){
+        else if (strcmp(args[0], "clr") == 0){ 
             clr();
         }
         else if (strcmp(args[0],"quit") == 0 ){
@@ -88,6 +88,9 @@ void execute_Command(char *command)
         }
         else if (strcmp(args[0],"echo") == 0) {
             echo(argc,args);
+        }
+        else {
+            //program_Invocation();
         }
     }
 }
