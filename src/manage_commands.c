@@ -7,8 +7,7 @@
 #include "cd.h"
 #include "clr.h"
 #include "quit.h"
-//#include "quit.h"
-//#include "echo.h"
+#include "echo.h"
 
 char* get_Command(void);
 void execute_Command(char* command);
@@ -86,6 +85,9 @@ void execute_Command(char *command)
         }
         else if (strcmp(args[0],"quit") == 0 ){
             quit();
+        }
+        else if (strcmp(args[0],"echo") == 0) {
+            echo(argc,args);
         }
     }
 }

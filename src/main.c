@@ -4,8 +4,6 @@
 #include <unistd.h>
 #include <limits.h>
 #include "manage_commands.h"
-#include "cd.h"
-#include "clr.h"
 /*
 1. Command line prompt (myshell debe contar con un prompt que contenga el camino al directorio actual) [LISTO]
 
