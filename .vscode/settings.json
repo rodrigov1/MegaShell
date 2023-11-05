@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "limits.h": "c"
-    }
+        "limits.h": "c",
+        "shm.h": "c",
+        "types.h": "c",
+        "unistd.h": "c",
+        "manage_commands.h": "c",
+        "clr.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
