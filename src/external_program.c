@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "../include/manage_commands.h"
 #include "../include/external_program.h"
 
 pid_t fork_success;
