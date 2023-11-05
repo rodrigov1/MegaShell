@@ -8,6 +8,7 @@
 #include "../include/clr.h"
 #include "../include/quit.h"
 #include "../include/echo.h"
+#include "../include/program_invocation.h"
 
 char* get_Command(void);
 void execute_Command(char* command);
@@ -51,9 +52,13 @@ char *get_Command(void)
 
 void execute_Command(char *command)
 {
-    // int back_exec = 0;
+    int back_exec = 0;
     char *args[64]; // Suponemos un máximo de 64 argumentos
     char *token;
+
+    if (strrchr(command,'&')){
+        back_exec = 1;
+    }
 
     // Eliminar el salto de línea al final del comando
     size_t command_length = strlen(command);
@@ -90,7 +95,7 @@ void execute_Command(char *command)
             echo(argc,args);
         }
         else {
-            //program_Invocation();
+            program_invocation(argc,args,back_exec);
         }
     }
 }
