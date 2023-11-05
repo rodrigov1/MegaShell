@@ -1,129 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <string.h>
-#include <limits.h> // Para PATH_MAX
 
-/*
-1. Command line prompt (myshell debe contar con un prompt que contenga el camino al directorio actual) [LISTO]
+pid_t fork_success;
 
-Por ejemplo, para el home: username@hostname:~$
-
-2. Internal commands (myshell debe soportar los siguientes comandos internos)
-
-    cd > directorio > : cambia el directorio actual a <directorio>. Si <directorio> no está presente, reporta el directorio actual. Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD. Este comando debe soportar la opción cd -, que retorna al último directorio de trabajo (OLDPWD).
-
-    clr: limpia la pantalla
-
-    echo <comentario|env var> : muestra <comentario> en la pantalla seguido por una línea nueva. (múltiples espacios/tabs pueden ser reducidos a un espacio).
-
-    quit : cierra myshell
-*/
-void command_cd(int, char *arr[64]);
-
-int main()
+void program_invocation(int argc, char *args[], int back)
 {
-    char buffer[PATH_MAX];
-    char hostname[HOST_NAME_MAX];
-    char username[LOGIN_NAME_MAX];
-    char input[1024];
-    char *args[64];
-    char *token;
+    args[argc] = NULL;
 
-    if (gethostname(hostname, HOST_NAME_MAX) == -1)
+    if (argc > 0)
     {
-        fprintf(stderr, "Error al obtener el nombre del host");
-        exit(1);
-    }
-
-    if (getlogin_r(username, LOGIN_NAME_MAX) == -1)
-    {
-        fprintf(stderr, "Error al obtener el nombre de usuario");
-        exit(1);
-    }
-
-    while (1)
-    {
-        if (getcwd(buffer, sizeof(buffer)) == NULL)
+        fork_success = fork();
+        switch (fork_success)
         {
-            fprintf(stderr, "Error al obtener el directorio actual");
-            exit(1);
-        }
+        case 0: // Child process
 
-        printf("%s@%s:%s$ ", username, hostname, buffer);
-
-        char command[1024];
-
-        if (fgets(command, sizeof(command), stdin) != NULL)
-        {
-            int argc = 0;
-            token = strtok(command, " ");
-            while (token != NULL)
+            // Check if args[0] is not null
+            if (args[0] != NULL)
             {
-                args[argc] = token;
-                argc++;
-                token = strtok(NULL, " ");
+                char *cmd = args[0];    // The first argument is the command
+                char **cmd_args = args; // Command arguments
+                
+                // Execute the command in a shell
+                execvp(cmd, cmd_args);
+
+                // execvp only returns if there was an error
+                fprintf(stderr, "Error executing the command in a shell\n");
+                exit(EXIT_FAILURE);
             }
-            args[argc] = NULL; // Marco el final
-            
-            if (strcmp(args[0], "cd") == 0)
+            else
             {
-                switch (argc)
-                {
-                case 1: // No arguments, show actual directory
-                    char cwd[1024];
-                    if (getcwd(cwd, sizeof(cwd)) != NULL)
-                    {
-                        printf("%s\n", cwd);
-                    }
-                    else
-                    {
-                        fprintf(stderr, "Error al obtener el directorio actual");
-                    }
-                    break;
-                case 2: // 1 Argument, it could be "-" or ">"
-                    if (strcmp(args[1], "-") == 0)
-                    {
-                        char *old_pwd = getenv("OLDPWD");
-                        if (old_pwd != NULL)
-                        {
-                            chdir(old_pwd);
-                        }
-                        else
-                        {
-                            printf("Variable de entorno OLDPWD no definida\n");
-                        }
-                    }
-                    else if (strcmp(args[1], ">") == 0)
-                    {
-                        if (chdir(args[1]) == 0)
-                        {
-                            char cwd[1024];
-                            if (getcwd(cwd, sizeof(cwd)) != NULL)
-                            {
-                                setenv("OLDPWD", getenv("PWD"), 1); // Actualizar OLDPWD
-                                setenv("PWD", cwd, 1);              // Actualizar PWD
-                            }
-                            else
-                            {
-                                fprintf(stderr, "Error al obtener el directorio actual");
-                            }
-                        }
-                        else
-                        {
-                            fprintf(stderr, "Error al cambiar al directorio especificado");
-                        }
-                    }
-                    break;
-                }
+                fprintf(stderr, "Null command\n");
+                exit(EXIT_FAILURE);
+            }
+
+        case -1: // Error creating the child process
+            fprintf(stderr, "Error creating the child process\n");
+            exit(EXIT_FAILURE);
+        default: // Parent process
+            if (back != 0)
+            {
+                wait(NULL); // Wait for the child process if "back" is specified
             }
         }
     }
-
-    // printf("\nSaliendo del shell.\n");
-    return 0;
-}
-
-void command_cd(int argc, char *args[64])
-{
 }

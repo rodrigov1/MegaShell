@@ -5,7 +5,9 @@
         "types.h": "c",
         "unistd.h": "c",
         "manage_commands.h": "c",
-        "clr.h": "c"
+        "clr.h": "c",
+        "stdlib.h": "c",
+        "external_program.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

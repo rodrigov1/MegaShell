@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <limits.h>
 #include "../include/manage_commands.h"
+#include "../include/external_program.h"
 #include "../include/cd.h"
 #include "../include/clr.h"
 #include "../include/quit.h"
 #include "../include/echo.h"
-#include "../include/external_program.h"
+
 
 char* get_Command(void);
 void execute_Command(char* command);
