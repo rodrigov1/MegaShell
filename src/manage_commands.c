@@ -8,7 +8,7 @@
 #include "../include/clr.h"
 #include "../include/quit.h"
 #include "../include/echo.h"
-#include "../include/program_invocation.h"
+#include "../include/external_program.h"
 
 char* get_Command(void);
 void execute_Command(char* command);
