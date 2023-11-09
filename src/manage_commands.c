@@ -10,6 +10,9 @@
 #include "../include/quit.h"
 #include "../include/echo.h"
 
+#define RESET_COLOR	"\x1b[0m"
+#define GREEN		"\x1b[32m"
+
 
 char* get_Command(void);
 void execute_Command(char* command);
@@ -38,7 +41,7 @@ void prompt()
         exit(1);
     }
 
-    fprintf(stdout, "%s@%s:%s$ ", username, hostname, buffer);
+    fprintf(stdout, GREEN "%s@%s:%s$ " RESET_COLOR, username, hostname, buffer);
 }
 
 char *get_Command(void)

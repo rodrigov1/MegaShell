@@ -1,4 +1,6 @@
 cd > /home/rodrigov
 cd
 echo $USER
-quit
+ls -l
+ps -a
+

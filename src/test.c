@@ -1,49 +1,31 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <signal.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
 
-pid_t fork_success;
+sig_atomic_t child_exit_status;
 
-void program_invocation(int argc, char *args[], int back)
+void clean_up_child_process (int signal_number)
 {
-    args[argc] = NULL;
+    /* Clean up the child process. */
+    int status;
+    wait (&status);
 
-    if (argc > 0)
-    {
-        fork_success = fork();
-        switch (fork_success)
-        {
-        case 0: // Child process
+    /* Store its exit status in a global variable. */
+    child_exit_status = status;
+}
 
-            // Check if args[0] is not null
-            if (args[0] != NULL)
-            {
-                char *cmd = args[0];    // The first argument is the command
-                char **cmd_args = args; // Command arguments
-                
-                // Execute the command in a shell
-                execvp(cmd, cmd_args);
+// Cleaning Up Children by Handling SIGCHLD
+int main ()
+{
+    /* Handle SIGCHLD by calling clean_up_child_process. */
+    struct sigaction sigchld_action;
+    memset (&sigchld_action, 0, sizeof (sigchld_action));
+    sigchld_action.sa_handler = &clean_up_child_process;
+    sigaction (SIGCHLD, &sigchld_action, NULL);
 
-                // execvp only returns if there was an error
-                fprintf(stderr, "Error executing the command in a shell\n");
-                exit(EXIT_FAILURE);
-            }
-            else
-            {
-                fprintf(stderr, "Null command\n");
-                exit(EXIT_FAILURE);
-            }
+    /* Now do things, including forking a child process. */
+    /* ... */
 
-        case -1: // Error creating the child process
-            fprintf(stderr, "Error creating the child process\n");
-            exit(EXIT_FAILURE);
-        default: // Parent process
-            if (back != 0)
-            {
-                wait(NULL); // Wait for the child process if "back" is specified
-            }
-        }
-    }
+    return 0;
 }
