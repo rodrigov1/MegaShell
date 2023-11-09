@@ -12,7 +12,8 @@ void cd(int argc, char *args[])
         if (strcmp(args[0], "cd") == 0) // Comando 'cd'
         {
             if (argc == 1)
-            {
+            {   
+                
                 // Sin argumentos, mostrar el directorio actual
                 char cwd[1024];
                 if (getcwd(cwd, sizeof(cwd)) != NULL)
@@ -27,7 +28,7 @@ void cd(int argc, char *args[])
             else if (argc == 2)
             {
                 // Cambiar al directorio anterior
-                if (strcmp(args[1], "-") == 0)
+                if (strcmp(args[1], "-") == 0) 
                 {
                     char *old_pwd = getenv("OLDPWD");
                     if (old_pwd != NULL)
@@ -41,26 +42,23 @@ void cd(int argc, char *args[])
                 }
                 else
                 {
-                }
-            }
-            else if (argc == 3)
-            {
-                if (chdir(args[2]) == 0)
-                {
-                    char cwd[1024];
-                    if (getcwd(cwd, sizeof(cwd)) != NULL)
+                    if (chdir(args[1]) == 0)
                     {
-                        setenv("OLDPWD", getenv("PWD"), 1); // Actualizar OLDPWD
-                        setenv("PWD", cwd, 1);              // Actualizar PWD
+                        char cwd[1024];
+                        if (getcwd(cwd, sizeof(cwd)) != NULL)
+                        {
+                            setenv("OLDPWD", getenv("PWD"), 1); // Updating OLDPWD 
+                            setenv("PWD", cwd, 1);              // Updating PWD
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Error al obtener el directorio actual");
+                        }
                     }
                     else
                     {
-                        fprintf(stderr, "Error al obtener el directorio actual");
+                        fprintf(stderr, "Error al cambiar de directorio\n");
                     }
-                }
-                else
-                {
-                    fprintf(stderr, "Error al cambiar de directorio\n");
                 }
             }
         }
