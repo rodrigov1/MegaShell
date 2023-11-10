@@ -1,31 +1,27 @@
-#include <signal.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <stdio.h> 
+#include <signal.h> 
+#include <setjmp.h> 
+#include <unistd.h> 
 
-sig_atomic_t child_exit_status;
-
-void clean_up_child_process (int signal_number)
+sigjmp_buf buf; 
+ 
+void handler(int sig)
 {
-    /* Clean up the child process. */
-    int status;
-    wait (&status);
-
-    /* Store its exit status in a global variable. */
-    child_exit_status = status;
+    siglongjmp(buf, 1);
 }
-
-// Cleaning Up Children by Handling SIGCHLD
-int main ()
+ 
+// A program that restarts itself when ctrl-c’d
+int main()
 {
-    /* Handle SIGCHLD by calling clean_up_child_process. */
-    struct sigaction sigchld_action;
-    memset (&sigchld_action, 0, sizeof (sigchld_action));
-    sigchld_action.sa_handler = &clean_up_child_process;
-    sigaction (SIGCHLD, &sigchld_action, NULL);
+    signal(SIGINT, handler);
 
-    /* Now do things, including forking a child process. */
-    /* ... */
+    if (!sigsetjmp(buf, 1)) 
+        printf("starting\n");
+    else
+        printf("restarting\n");
 
-    return 0;
+    while(1) {
+        sleep(1);
+        printf("processing...\n");
+    }
 }
