@@ -11,10 +11,38 @@
 
 pid_t fork_success;
 int jobId = 0;
-// sig_atomic_t child_exit_status;
 int jobIdBG[BACKGROUND_NUM] = {0, 0}; // Job id of processes in background
-int pidchldBG[BACKGROUND_NUM] = {0, 0}; // Pid of processes in background
-int flags[BACKGROUND_NUM] = {0, 0}; // Flags for child process which ended
+int jobIdFG = 0;
+pid_t pidchldFG = 0;
+pid_t pidchldBG[BACKGROUND_NUM] = {0, 0}; // Pid of processes in background
+int flags[BACKGROUND_NUM] = {0, 0};       // Flags for child process which ended
+
+static void int_handler(int sig)
+{ // CTRL-C signal handler
+    if (jobIdFG > 0)
+    {
+        fprintf(stdout, "\n");
+        kill(pidchldFG, SIGINT);
+    }
+}
+
+static void stop_handler(int sig)
+{ // CTRL-Z signal handler
+    if (jobIdFG > 0)
+    {
+        fprintf(stdout, "\n");
+        kill(pidchldFG, SIGSTOP);
+    }
+}
+
+static void quit_handler(int sig)
+{ // CTRL-/ signal handler
+    if (jobIdFG > 0)
+    {
+        fprintf(stdout, "\n");
+        kill(pidchldFG, SIGQUIT);
+    }
+}
 
 void chld_handler(int signal_number)
 {
@@ -47,6 +75,7 @@ char **clean_command(int argc, char *args[])
         if (strrchr(args[i], '&'))
         {
             args[i] = NULL;
+            break;
         }
         i++;
     }
@@ -55,6 +84,16 @@ char **clean_command(int argc, char *args[])
 
 void program_invocation(int argc, char *args[], int back)
 {
+    struct sigaction sa;
+
+    sa.sa_handler = stop_handler;
+    sigaction(SIGTSTP, &sa, NULL);
+
+    sa.sa_handler = int_handler;
+    sigaction(SIGINT, &sa, NULL);
+
+    sa.sa_handler = quit_handler;
+    sigaction(SIGQUIT, &sa, NULL);
 
     signal(SIGCHLD, chld_handler);
 
@@ -73,7 +112,6 @@ void program_invocation(int argc, char *args[], int back)
             // Check if args[0] is not null
             if (cmd != NULL)
             {
-
                 // Execute the command in a shell
                 execvp(cmd, cmd_args);
 
@@ -95,6 +133,9 @@ void program_invocation(int argc, char *args[], int back)
             if (back == 0)
             {
                 waitpid(fork_success, 0, 0);
+                pidchldFG = fork_success; // Stores child's pid for each signal handler
+                jobIdFG++;
+                
             }
             else
             {
@@ -123,4 +164,8 @@ void program_invocation(int argc, char *args[], int back)
             break;
         }
     }
+
+    signal(SIGTSTP, SIG_IGN); //
+    signal(SIGINT, SIG_IGN);  // Ignoring both signals until a new extern_program command is created
+    jobIdFG = 0;
 }
