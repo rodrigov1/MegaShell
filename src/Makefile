@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -pedantic -Werror
 
 # Source files
-SRC = main.c
+SRC = main.c manage_commands.c cd.c clr.c quit.c echo.c external_program.c
 
 # Object files (automatically generated from SRC)
 OBJ = $(SRC:.c=.o)
@@ -15,7 +15,7 @@ TARGET = myshell
 DATE := $(shell date)
 
 # Include directory
-INCDIR = /headers
+INCDIR = ./include
 
 # Build the target executable
 $(TARGET): $(OBJ)

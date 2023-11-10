@@ -1,0 +1,6 @@
+cd > /home/rodrigov
+cd
+echo $USER
+ls -l
+ps -a
+
