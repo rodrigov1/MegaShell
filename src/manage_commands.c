@@ -84,8 +84,11 @@ void execute_Command(char *command)
     args[argc] = NULL;
 
     if (argc > 0)
-    {
-        if (strcmp(args[0], "cd") == 0) 
+    {   
+        if (!flag_pipe(args)){
+            pipe_invocation(argc,args);
+        }
+        else if (strcmp(args[0], "cd") == 0) 
         {
             cd(argc, args);
         }
