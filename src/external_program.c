@@ -112,12 +112,11 @@ void program_invocation(int argc, char *args[], int back)
             // Check if args[0] is not null
             if (cmd != NULL)
             {
-                // Execute the command in a shell
-                execvp(cmd, cmd_args);
-
-                // execvp only returns if there was an error
-                fprintf(stderr, "Error executing the command in a shell\n");
-                exit(EXIT_FAILURE);
+                // Execute the command in a shell, it only returns if there is an error
+                if (execvp(cmd, cmd_args)==-1){
+                    fprintf(stderr, "Error executing the command in a shell\n");
+                    exit(EXIT_FAILURE);
+                }
             }
             else
             {
@@ -163,9 +162,12 @@ void program_invocation(int argc, char *args[], int back)
             }
             break;
         }
+        signal(SIGTSTP, SIG_IGN); //
+        signal(SIGINT, SIG_IGN);  // Ignoring both signals until a new extern_program command is created
+        jobIdFG = 0;
     }
 
-    signal(SIGTSTP, SIG_IGN); //
-    signal(SIGINT, SIG_IGN);  // Ignoring both signals until a new extern_program command is created
-    jobIdFG = 0;
+    //signal(SIGTSTP, SIG_IGN); //
+    ///signal(SIGINT, SIG_IGN);  // Ignoring both signals until a new extern_program command is created
+    //jobIdFG = 0;
 }
