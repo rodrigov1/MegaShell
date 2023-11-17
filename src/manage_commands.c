@@ -9,6 +9,7 @@
 #include "../include/clr.h"
 #include "../include/quit.h"
 #include "../include/echo.h"
+#include "../include/pipe.h"
 
 #define RESET_COLOR	"\x1b[0m"
 #define GREEN		"\x1b[32m"
@@ -57,20 +58,23 @@ char *get_Command(void)
 void execute_Command(char *command)
 {
     int back_exec = 0;
+    int pipe_flag = 0;
     char *args[64]; // Suponemos un máximo de 64 argumentos
     char *token;
+    
+
+    command[strcspn(command,"\n")] = '\0';
 
     if (strrchr(command,'&')){
+        command[strcspn(command,"&")] = '\0';
         back_exec = 1;
     }
 
-    // Eliminar el salto de línea al final del comando
-    size_t command_length = strlen(command);
-    if (command_length > 0 && command[command_length - 1] == '\n')
-    {
-        command[command_length - 1] = '\0';
+    if (strrchr(command,'|')){
+        pipe_flag = 1;
     }
 
+    
     int argc = 0;
 
     // Voy despedazando los comandos por string hasta un espacio
@@ -85,7 +89,7 @@ void execute_Command(char *command)
 
     if (argc > 0)
     {   
-        if (!flag_pipe(args)){
+        if (pipe_flag == 1){
             pipe_invocation(argc,args);
         }
         else if (strcmp(args[0], "cd") == 0) 
