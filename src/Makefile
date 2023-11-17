@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -pedantic -Werror
 
 # Source files
-SRC = main.c manage_commands.c cd.c clr.c quit.c echo.c external_program.c
+SRC = main.c manage_commands.c cd.c clr.c quit.c echo.c external_program.c pipe.c
 
 # Object files (automatically generated from SRC)
 OBJ = $(SRC:.c=.o)
