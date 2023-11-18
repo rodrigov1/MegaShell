@@ -10,6 +10,7 @@
 #include "../include/quit.h"
 #include "../include/echo.h"
 #include "../include/pipe.h"
+#include "../include/io_redirection.h"
 
 #define RESET_COLOR	"\x1b[0m"
 #define GREEN		"\x1b[32m"
@@ -59,6 +60,7 @@ void execute_Command(char *command)
 {
     int back_exec = 0;
     int pipe_flag = 0;
+    int io_flag = 0;
     char *args[64]; // Suponemos un máximo de 64 argumentos
     char *token;
     
@@ -72,6 +74,14 @@ void execute_Command(char *command)
 
     if (strrchr(command,'|')){
         pipe_flag = 1;
+    }
+
+    if (strrchr(command,'>')){
+        io_flag = 1;
+    }
+
+    if(strrchr(command,'<')){
+        io_flag = 1;
     }
 
     
@@ -89,8 +99,13 @@ void execute_Command(char *command)
 
     if (argc > 0)
     {   
-        if (pipe_flag == 1){
+        if (io_flag == 1){
+            io_redirection(argc,args);
+            return;
+        }
+        else if (pipe_flag == 1){
             pipe_invocation(argc,args);
+            return;
         }
         else if (strcmp(args[0], "cd") == 0) 
         {
