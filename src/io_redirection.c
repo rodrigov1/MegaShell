@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include "../include/external_program.h"
 /*
 8. I/O redirection
 */
@@ -14,7 +15,6 @@ void io_redirection(int argc, char *args[])
     int in = 0;
     int out = 0;
     int flag = 0;
-    int continuar;
     char **cmd1 = (char **)malloc(sizeof(char *) * argc);
     int argc1 = 0;
 
@@ -53,84 +53,61 @@ void io_redirection(int argc, char *args[])
             }
         }
         else
-        {   
+        {
             flag = 1;
             break;
         }
     }
     cmd1[argc1] = NULL;
 
-    if (in == 1)
-    {
-        int fd1;
-        fd1 = open(inputfile, O_RDONLY);
-        if (fd1 == -1)
-        {
-            perror("Error opening the file\n");
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            if (dup2(fd1, STDIN_FILENO) == -1) // fd is the file descriptor of the file we want to redirect to STDIN_FILENO
-            {
-                perror("Error duplicating the file descriptor\n");
-                exit(EXIT_FAILURE);
-            }
-            pid_t pid = fork();
-            switch (pid)
-            {
-            case -1:
-                perror("Error creating the child process\n");
-                exit(EXIT_FAILURE);
-            case 0:
-                execvp(cmd1[0], cmd1);
-            default:
-                wait(NULL);
-                close(fd1); // Closing the file descriptor
-                continuar = 1;
-                break;
-            }
-        }
-    } else{
-        continuar = 1;
-    }
+    pid_t pid;
+    pid = fork();
 
-    if (continuar && out == 1)
+    switch (pid)
     {
-        int fd2;
-        fd2 = open(outputfile, O_CREAT | O_WRONLY, 0777); // 0777 is the permission of the file created
-        if (fd2 == -1)
+    case -1:
+        perror("Error creating the child process\n");
+        exit(EXIT_FAILURE);
+
+    case 0:
+        if (inputfile != NULL)
         {
-            perror("Error opening the file\n");
-            exit(EXIT_FAILURE);
-        }
-        else
-        {
-            if (dup2(fd2, STDOUT_FILENO) == -1) // fd is the file descriptor of the file we want to redirect to STDOUT_FILENO
+            int fd_in = open(inputfile, O_RDONLY, 0777); // Open the file in read only mode with permissions 0777
+            if (fd_in == -1)
             {
-                perror("Error duplicating the file descriptor\n");
+                perror("Redirection fail\n");
                 exit(EXIT_FAILURE);
             }
-            pid_t pid2 = fork();
-            switch (pid2)
-            {
-            case -1:
-                perror("Error creating the child process\n");
-                exit(EXIT_FAILURE);
-            case 0:
-                execvp(cmd1[0], cmd1);
-            default:
-                waitpid(pid2, NULL, 0);
-                close(fd2); // Closing the file descriptor
-                break;
-            }
+            dup2(fd_in, STDIN_FILENO);
+            close(fd_in);
         }
+
+        if (outputfile != NULL)
+        {
+            int fd_out = open(outputfile, O_WRONLY | O_CREAT, 0777);
+            if (fd_out == -1)
+            {
+                perror("Redirection fail\n");
+                exit(EXIT_FAILURE);
+            }
+            dup2(fd_out, STDOUT_FILENO);
+            close(fd_out);
+        }
+        program_invocation(argc1, cmd1,0);
+        exit(0); // This only executes if execvp fails
+        break;
+
+    default:
+        waitpid(pid, 0, 0);
+        break;
     }
 
     for (int i = 0; i < argc1; i++)
     {
         free(cmd1[i]);
     }
+
     free(cmd1);
+    
     return;
 }
