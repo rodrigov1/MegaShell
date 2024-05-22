@@ -99,7 +99,7 @@ Use the `BLANK_README.md` to get started.
 
 - ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
 - ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
-  <img src="https://www.ubuntupit.com/wp-content/uploads/2020/09/make.jpg" width="94px" >
+- <img src="https://www.ubuntupit.com/wp-content/uploads/2020/09/make.jpg" width="94px" height: "24px">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
