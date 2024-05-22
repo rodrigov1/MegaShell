@@ -1,108 +1,195 @@
-# MyShell
-### SOI - FCEFyN - UNC - 2023
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 
+<a name="readme-top"></a>
 
-## Objetivo
-Los objetivos del presente laboratorio son:
-- Utilizar mecanismos de creación de Procesos.
-- Utilizar mecanismos de concurrencia e IPC.
-- Diseñar un intérprete de línea de comandos al estilo Bourne shell.
-- Ampliar las características de un intérprete de línea de comandos al estilo Bourne shell.
-- Comprender el uso de la API de señales del SO
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Don't forget to give the project a star!
+*** Thanks again! Now go create something AMAZING! :D
+-->
 
-## Duración
-Con el material dado en clase, este laboratorio está diseñado para resolverse entre 16 y 20 horas.
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-## Introducción
-Este trabajo práctico consta en la elaboración de un programa en lenguaje C sobre _GNU/Linux_. El trabajo se divide en soluciones incrementales.
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
+  <h3 align="center">Best-README-Template</h3>
 
-## Actividades
-#### 1. Command line prompt
-_myshell_ debe contar con un prompt que contenga el camino al directorio actual.
+  <p align="center">
+    An awesome README template to jumpstart your projects!
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    ·
+    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
-Por ejemplo, para el home: _username@hostname:~$_
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
+<!-- ABOUT THE PROJECT -->
 
-#### 2. Internal commands
-_myshell_ debe soportar los siguientes comandos internos:
+## About The Project
 
-- __cd \> directorio \>__ : cambia el directorio actual a \<directorio\>. Si \<directorio\> no está presente, reporta el directorio actual. Si el directorio no existe se debe imprimir un error apropiado. Además, este comando debe cambiar la variable de entorno PWD. 
-Este comando debe soportar la opción *cd -*, que retorna al último directorio de trabajo (__OLDPWD__).
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-- __clr__: limpia la pantalla
+There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
 
-- __echo \<comentario\|env var\>__ : muestra \<comentario\> en la pantalla seguido por una línea nueva. (múltiples espacios\/tabs pueden ser reducidos a un espacio).
+Here's why:
 
-- __quit__ : cierra myshell
+- Your time should be focused on creating something amazing. A project that solves a problem and helps others
+- You shouldn't be doing the same tasks over and over like creating a README from scratch
+- You should implement DRY principles to the rest of your life :smile:
 
-#### 3. Program invocation
-Las entradas del usuario que no sean comandos internos deben ser interpretados como la invocación de un programa. La misma tiene que ser realizada mediante _fork_ y _execl_. Debe además soportar paths relativos y absolutos.
+Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
 
+Use the `BLANK_README.md` to get started.
 
-#### 4. Batch file
-_myshell_ debe ser capaz de tomar sus comandos a ejecutar desde un archivo. Por ejemplo, si la shell es invocada con un argumento _myshell batchfile_. El _batchfile_ contiene un conjunto de comandos de línea para que la shell ejecute. 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Cuando se alcance el fin de archivo (EOF), _myshell_ debe cerrarse.
+### Built With
 
-Notar que si myshell se ejecuta sin argumento (.\/myshell), se tiene que mostrar el command prompt y se debe esperar a comandos del usuario vía stdin.
+- ![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)
+- ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
+  <img src="https://www.ubuntupit.com/wp-content/uploads/2020/09/make.jpg" width="94px" >
 
-#### 5. Background execution
-Un ampersand & al final de la línea de comando indica que la shell debe retornar al prompt inmediatamente luego de lanzar al programa a ejecutarse en background.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-Cuando se comienza un trabajo en background, se debe imprimir un mensaje indicando su _Trabajo_ y su _ID de proceso_.
+<!-- GETTING STARTED -->
 
-`[<job id>] <process id>`
+## Getting Started
 
-Ejemplo:
-`$ echo 'hola' &
-[1] 10506
-hola`
+### Installation
 
-#### 6. Signal Handling
-Si se ingresa alguna de las combinaciones CTRL-C, CTRL-Z o CTRL-/\, las señales resultantes (**SIGINT**, **SIGTSTP**, **SIGQUIT** respectivamente) deben ser enviadas al trabajo (job) en ejecución de primer plano en vez de a _myshell_. Si no hay un trabajo (job) en ejecución de primer plano, no debe suceder nada.
+1. Clone the repo
+   ```sh
+   git clone https://github.com/rodrigov1/MegaShell.git
+   ```
+2. Make the project and run it
+   ```sh
+   make run
+   ```
 
-#### 7. Pipe
-_myshell_ provee la funcionalidad de un pipe a través del operador **|** (pipe). El mismo conecta la salida estándar del proceso (stdout) lazando por el comando de la izquierda del pipe con la entrada estándar del proceso (stdin) que se genera con el comando a la derecha del pipe.
+### Uninstallation
 
-Ejemplos:
-```
-$ last <username> | wc -l
-$ ps aux | grep firefox
-$ grep bash /etc/passwd | cut -d “:” -f 1 | sort -r
-```
-##### Responder:
-¿Dónde se encuentran los pipes en el filesystem, qué atributos tienen?
+1. Use make clean
+   ```sh
+   make clean
+   ```
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-#### 8. I/O redirection 
-Se debe soportar redirección de entrada/salida en _stdin_ y/o _stdout_. 
+<!-- USAGE EXAMPLES -->
 
-Por ejemplo:
-```
-program arg1 ar2 < inputfile > outputfile
-```
+## Usage
 
-Ejecuta la el programa _program_ con los arguments _arg1_, _arg2_. _stdin_ es reemplazado por _inputfile_ y _stdout_ por _outputfile_.
-La redirección debe funcionar para el comando interno _echo_.
+It follows a convetional Bash-Shell functionality. Once the app is initiated, you can see the differents operations that are available on the screen using -h or --help
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Criterios de Corrección
-- Se debe compilar el código con los flags de compilación: -Wall -Pedantic -Werror 
-- Dividir el código en módulos de manera juiciosa.
-- Estilo de código.
-- El código no debe contener errores, ni warnings.
-- El código no debe contener errores de cppcheck.
-- _myshell_ no debe crear procesos zombies.
+<!-- CONTRIBUTING -->
 
-## Qué se debe Entregar
-- Informe del desarrollo del proyecto (markdown).
-- Código (funcionando bajo las especificaciones dadas y bajo cualquier caso de test de parámetros de entrada).
-- Makefile
-- Todo en el GitHub
+## Contributing
 
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-### Links
-- [1] https://www.toptal.com/git/git-workflows-for-pros-a-good-git-guide
-- [2] https://www.dataschool.io/how-to-contribute-on-github/
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CONTACT -->
+
+## Contact
+
+Project Link: [https://github.com/rodrigov1/MegaShell](https://github.com/rodrigov1/MegaShell)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+- [README's template](https://github.com/othneildrew/Best-README-Template?tab=readme-ov-file)
+- [Img Shields](https://shields.io)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/othneildrew
+[product-screenshot]: images/screenshot.png
